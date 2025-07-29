@@ -5,7 +5,7 @@ import { IWallet } from "./wallet.interface";
 
 const walletSchema = new Schema<IWallet>(
   {
-    userId:{
+    user:{
           type:Schema.Types.ObjectId,
           ref:"User",
           required:true

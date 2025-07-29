@@ -2,7 +2,7 @@ import { Types } from "mongoose"
 
 export interface IWallet {
    
-    userId:Types.ObjectId,
+    user:Types.ObjectId,
     balance:number,
     isBlocked:boolean
 }
