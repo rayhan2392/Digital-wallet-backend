@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import { Wallet } from "../wallet/wallet.model";
 import { IUser } from "./user.interface";
 import { User } from "./user.model";
+import bcrypt from "bcryptjs";
+import { envVars } from "../../config/env";
 
 const createUser = async (payload: Partial<IUser>) => {
   const session = await mongoose.startSession();
@@ -10,12 +12,14 @@ const createUser = async (payload: Partial<IUser>) => {
   try {
     const { email, password, ...rest } = payload;
 
-    // Step 1: Create user inside session
+   
+
+    const hashedPassword =await bcrypt.hash(password as string,Number(envVars.BCRYPT_SALT_ROUND))
     const user = await User.create(
       [
         {
           email,
-          password,
+          password:hashedPassword,
           ...rest,
         },
       ],
@@ -23,24 +27,24 @@ const createUser = async (payload: Partial<IUser>) => {
     );
     const createdUser = user[0];
 
-    // Step 2: Create wallet with session
+   
     const wallet = await Wallet.create(
       [
         {
-          user: createdUser._id, // ✅ correct key
+          user: createdUser._id, 
         },
       ],
       { session }
     );
 
-    // Step 3: Update user with wallet ID inside session
+    
     const updatedUser = await User.findByIdAndUpdate(
       createdUser._id,
       { wallet: wallet[0]._id },
-      { new: true, session } // ✅ session added
+      { new: true, session } 
     );
 
-    // ✅ Commit transaction
+   
     await session.commitTransaction();
     session.endSession();
 
