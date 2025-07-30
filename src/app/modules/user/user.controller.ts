@@ -20,6 +20,21 @@ const createUser=catchAsync(async(req:Request,res:Response,nex:NextFunction)=>{
     //
 })
 
+const createAdmin=catchAsync(async(req:Request,res:Response,nex:NextFunction)=>{
+      
+    const admin = await userServices.createAdmin(req.body)
+
+    sendResponse(res,{
+        statusCode:201,
+        success:true,
+        message:'user created successfully',
+        data:admin
+
+    })
+
+    //
+})
+
 const getAllUsers=catchAsync(async(req:Request,res:Response,nex:NextFunction)=>{
       
     const users = await userServices.getAllUsers()
@@ -112,6 +127,7 @@ const handleSuspendAgent=catchAsync(async(req:Request,res:Response,nex:NextFunct
 
 export const userControllers= {
     createUser,
+    createAdmin,
     getAllUsers,
     getSingleUser,
     handleBlockUser,

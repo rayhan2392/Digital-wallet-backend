@@ -14,6 +14,9 @@ const createUser = async (payload: Partial<IUser>) => {
   try {
     const { email, password, ...rest } = payload;
 
+    if (payload.role === "admin" || payload.role === "super_admin") {
+      throw new AppError(403, "Not allowed to set this role");
+    }
 
 
     const hashedPassword = await bcrypt.hash(password as string, Number(envVars.BCRYPT_SALT_ROUND))
@@ -22,7 +25,7 @@ const createUser = async (payload: Partial<IUser>) => {
         {
           email,
           password: hashedPassword,
-          ...rest,
+          rest,
         },
       ],
       { session }
@@ -61,6 +64,25 @@ const createUser = async (payload: Partial<IUser>) => {
 };
 
 
+const createAdmin = async (payload: Partial<IUser>) => {
+
+  const { email, password, ...rest } = payload;
+
+  const hashedPassword = await bcrypt.hash(password as string, Number(envVars.BCRYPT_SALT_ROUND))
+
+  const admin = await User.create({
+    email,
+    password: hashedPassword,
+    role: Role.ADMIN,
+    isApproved: true,
+    ...rest
+  })
+
+  return admin;
+
+}
+
+
 const getAllUsers = async () => {
   const users = await User.find({})
   return users;
@@ -75,8 +97,8 @@ const handleBlockUser = async (id: string) => {
 
   const user = await User.findById(id)
 
-  if(!user){
-    throw new AppError(httpStatus.NOT_FOUND,'user not found')
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'user not found')
   }
 
   const isBlocked = user.isBlocked
@@ -86,7 +108,7 @@ const handleBlockUser = async (id: string) => {
   }
 
   user.isBlocked = true;
-  await user.save(); 
+  await user.save();
   return user;
 }
 
@@ -94,8 +116,8 @@ const handleUnblockUser = async (id: string) => {
 
   const user = await User.findById(id)
 
-  if(!user){
-    throw new AppError(httpStatus.NOT_FOUND,'user not found')
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'user not found')
   }
 
   const isUnblocked = user.isBlocked
@@ -105,7 +127,7 @@ const handleUnblockUser = async (id: string) => {
   }
 
   user.isBlocked = false;
-  await user.save(); 
+  await user.save();
   return user;
 }
 
@@ -113,11 +135,11 @@ const handleApproveAgent = async (id: string) => {
 
   const user = await User.findById(id)
 
-  if(!user){
-    throw new AppError(httpStatus.NOT_FOUND,'User not found')
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found')
   }
-  if(user.role!==Role.AGENT){
-        throw new AppError(httpStatus.BAD_REQUEST,'User is not agent')
+  if (user.role !== Role.AGENT) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'User is not agent')
   }
 
   const isApproved = user.isApproved
@@ -127,7 +149,7 @@ const handleApproveAgent = async (id: string) => {
   }
 
   user.isApproved = true;
-  await user.save(); 
+  await user.save();
   return user;
 }
 
@@ -135,11 +157,11 @@ const handleSuspendAgent = async (id: string) => {
 
   const user = await User.findById(id)
 
-  if(!user){
-    throw new AppError(httpStatus.NOT_FOUND,'User not found')
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found')
   }
-  if(user.role!==Role.AGENT){
-        throw new AppError(httpStatus.BAD_REQUEST,'User is not agent')
+  if (user.role !== Role.AGENT) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'User is not agent')
   }
 
   const isApproved = user.isApproved
@@ -149,16 +171,17 @@ const handleSuspendAgent = async (id: string) => {
   }
 
   user.isApproved = false;
-  await user.save(); 
+  await user.save();
   return user;
 }
 
 export const userServices = {
   createUser,
+  createAdmin,
   getAllUsers,
   getSingleUser,
   handleBlockUser,
   handleUnblockUser,
   handleApproveAgent,
-  handleSuspendAgent
+  handleSuspendAgent,
 };
