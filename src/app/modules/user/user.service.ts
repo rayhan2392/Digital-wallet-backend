@@ -12,7 +12,7 @@ const createUser = async (payload: Partial<IUser>) => {
   session.startTransaction();
 
   try {
-    const { email, password, ...rest } = payload;
+    const { email, password, phone, ...rest } = payload;
 
     if (payload.role === "admin" || payload.role === "super_admin") {
       throw new AppError(403, "Not allowed to set this role");
@@ -24,8 +24,9 @@ const createUser = async (payload: Partial<IUser>) => {
       [
         {
           email,
+          phone,
           password: hashedPassword,
-          rest,
+          ...rest,
         },
       ],
       { session }
