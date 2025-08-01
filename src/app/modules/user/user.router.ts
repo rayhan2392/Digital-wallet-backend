@@ -2,9 +2,11 @@ import { Router } from "express";
 import { userControllers } from "./user.controller";
 import { checkAuth } from "../../middlewares/checkAuth";
 import { Role } from "./user.interface";
+import { validateRequest } from "../../middlewares/validateRequest";
+import { registerUserZodSchema } from "./user.validate";
 
 const router = Router();
-router.post("/register",userControllers.createUser)
+router.post("/register",validateRequest(registerUserZodSchema), userControllers.createUser)
 router.post("/create-admin",checkAuth(Role.SUPER_ADMIN), userControllers.createAdmin)     //superadmin only route
 router.get("/me",checkAuth(...Object.values(Role)),userControllers.getMyProfile)
 router.get("/all-users",checkAuth(Role.ADMIN,Role.SUPER_ADMIN), userControllers.getAllUsers)
