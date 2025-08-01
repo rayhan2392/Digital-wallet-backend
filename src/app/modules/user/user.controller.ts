@@ -1,131 +1,148 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {  NextFunction, Request,  Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
 import { userServices } from "./user.service";
 import { sendResponse } from "../../utils/sendResponse";
+import { User } from "./user.model";
 
 
-const createUser=catchAsync(async(req:Request,res:Response,nex:NextFunction)=>{
-      
+const createUser = catchAsync(async (req: Request, res: Response, nex: NextFunction) => {
+
     const user = await userServices.createUser(req.body)
 
-    sendResponse(res,{
-        statusCode:201,
-        success:true,
-        message:'user created successfully',
-        data:user
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: 'user created successfully',
+        data: user
 
     })
 
     //
 })
 
-const createAdmin=catchAsync(async(req:Request,res:Response,nex:NextFunction)=>{
-      
+const createAdmin = catchAsync(async (req: Request, res: Response, nex: NextFunction) => {
+
     const admin = await userServices.createAdmin(req.body)
 
-    sendResponse(res,{
-        statusCode:201,
-        success:true,
-        message:'user created successfully',
-        data:admin
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: 'user created successfully',
+        data: admin
 
     })
 
     //
 })
 
-const getAllUsers=catchAsync(async(req:Request,res:Response,nex:NextFunction)=>{
-      
+const getAllUsers = catchAsync(async (req: Request, res: Response, nex: NextFunction) => {
+
     const users = await userServices.getAllUsers()
 
-    sendResponse(res,{
-        statusCode:201,
-        success:true,
-        message:'users retrived successfully',
-        data:users
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: 'users retrived successfully',
+        data: users
 
     })
 
     //
 })
 
-const getSingleUser=catchAsync(async(req:Request,res:Response,nex:NextFunction)=>{
-      
+const getSingleUser = catchAsync(async (req: Request, res: Response, nex: NextFunction) => {
+
     const user = await userServices.getSingleUser(req.params.id)
 
-    sendResponse(res,{
-        statusCode:201,
-        success:true,
-        message:'user retrived successfully',
-        data:user
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: 'user retrived successfully',
+        data: user
 
     })
 
     //
 })
 
-const handleBlockUser=catchAsync(async(req:Request,res:Response,nex:NextFunction)=>{
-      
+const getMyProfile = catchAsync(async (req: Request, res: Response, nex: NextFunction) => {
+
+    const userId = req.user.userId;
+    const user = await User.findById(userId).populate("wallet");
+
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: 'user profile retrived successfully',
+        data: user
+
+    })
+
+    //
+})
+
+const handleBlockUser = catchAsync(async (req: Request, res: Response, nex: NextFunction) => {
+
     const user = await userServices.handleBlockUser(req.params.id)
 
-    sendResponse(res,{
-        statusCode:201,
-        success:true,
-        message:'user blocked successfully',
-        data:user
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: 'user blocked successfully',
+        data: user
 
     })
 
     //
 })
 
-const handleUnblockUser=catchAsync(async(req:Request,res:Response,nex:NextFunction)=>{
-      
+const handleUnblockUser = catchAsync(async (req: Request, res: Response, nex: NextFunction) => {
+
     const user = await userServices.handleUnblockUser(req.params.id)
 
-    sendResponse(res,{
-        statusCode:201,
-        success:true,
-        message:'user unblocked successfully',
-        data:user
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: 'user unblocked successfully',
+        data: user
 
     })
 
     //
 })
 
-const handleApproveAgent=catchAsync(async(req:Request,res:Response,nex:NextFunction)=>{
-      
+const handleApproveAgent = catchAsync(async (req: Request, res: Response, nex: NextFunction) => {
+
     const user = await userServices.handleApproveAgent(req.params.id)
 
-    sendResponse(res,{
-        statusCode:201,
-        success:true,
-        message:'agent approved successfully',
-        data:user
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: 'agent approved successfully',
+        data: user
 
     })
 
     //
 })
 
-const handleSuspendAgent=catchAsync(async(req:Request,res:Response,nex:NextFunction)=>{
-      
+const handleSuspendAgent = catchAsync(async (req: Request, res: Response, nex: NextFunction) => {
+
     const user = await userServices.handleSuspendAgent(req.params.id)
 
-    sendResponse(res,{
-        statusCode:201,
-        success:true,
-        message:'agent suspended successfully',
-        data:user
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: 'agent suspended successfully',
+        data: user
 
     })
 
     //
 })
 
-export const userControllers= {
+export const userControllers = {
     createUser,
     createAdmin,
     getAllUsers,
@@ -133,5 +150,6 @@ export const userControllers= {
     handleBlockUser,
     handleUnblockUser,
     handleApproveAgent,
-    handleSuspendAgent
+    handleSuspendAgent,
+    getMyProfile
 }
