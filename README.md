@@ -137,8 +137,8 @@ src/
 
 ---
 
-## 📽️ Demo Video (📎 Link)
-[▶️ Watch Project Demo]--- https://www.youtube.com/watch?v=C9LHLOmUMjY
+
+Watch Project Demo-- https://www.youtube.com/watch?v=C9LHLOmUMjY
 
 ---
 
