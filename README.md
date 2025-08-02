@@ -67,8 +67,8 @@ It follows best practices in modular backend architecture, authentication, and v
 
 | Method | Endpoint             | Description                        | Access       |
 |--------|----------------------|------------------------------------|--------------|
-| `POST` | `/api/auth/login`    | Login with credentials             | Public       |
-| `POST` | `/api/auth/logout`   | Logout current session             | Authenticated |
+| `POST` | `/auth/login`    | Login with credentials             | Public       |
+| `POST` | `/auth/logout`   | Logout current session             | Authenticated |
 
 ---
 
@@ -76,15 +76,15 @@ It follows best practices in modular backend architecture, authentication, and v
 
 | Method | Endpoint                 | Description                            | Access               |
 |--------|--------------------------|----------------------------------------|----------------------|
-| `POST` | `/api/users/register`    | Register a new user or agent           | Public               |
-| `POST` | `/api/users/create-admin`| Create a new admin                      | SUPER_ADMIN only     |
-| `GET`  | `/api/users/me`          | Get logged-in user's profile           | All Roles            |
-| `GET`  | `/api/users/all-users`   | Get all users and agents               | ADMIN, SUPER_ADMIN   |
-| `GET`  | `/api/users/:id`         | Get single user by ID                  | ADMIN, SUPER_ADMIN   |
-| `PATCH`| `/api/users/block/:id`   | Block a user account                   | ADMIN, SUPER_ADMIN   |
-| `PATCH`| `/api/users/unblock/:id` | Unblock a user account                 | ADMIN, SUPER_ADMIN   |
-| `PATCH`| `/api/users/approve/:id` | Approve an agent                       | ADMIN, SUPER_ADMIN   |
-| `PATCH`| `/api/users/suspend/:id` | Suspend an agent                       | ADMIN, SUPER_ADMIN   |
+| `POST` | `/user/register`    | Register a new user or agent           | Public               |
+| `POST` | `/user/create-admin`| Create a new admin                      | SUPER_ADMIN only     |
+| `GET`  | `/user/me`          | Get logged-in user's profile           | All Roles            |
+| `GET`  | `/user/all-users`   | Get all users and agents               | ADMIN, SUPER_ADMIN   |
+| `GET`  | `/user/:id`         | Get single user by ID                  | ADMIN, SUPER_ADMIN   |
+| `PATCH`| `/user/block/:id`   | Block a user account                   | ADMIN, SUPER_ADMIN   |
+| `PATCH`| `/user/unblock/:id` | Unblock a user account                 | ADMIN, SUPER_ADMIN   |
+| `PATCH`| `/user/approve/:id` | Approve an agent                       | ADMIN, SUPER_ADMIN   |
+| `PATCH`| `/user/suspend/:id` | Suspend an agent                       | ADMIN, SUPER_ADMIN   |
 
 ---
 
@@ -92,14 +92,14 @@ It follows best practices in modular backend architecture, authentication, and v
 
 | Method | Endpoint                     | Description                                 | Access               |
 |--------|------------------------------|---------------------------------------------|----------------------|
-| `GET`  | `/api/wallets`               | Get all wallets                             | ADMIN, SUPER_ADMIN   |
-| `GET`  | `/api/wallets/my-wallet`     | Get own wallet info                         | USER, AGENT          |
-| `GET`  | `/api/wallets/:id`           | Get wallet info by user ID                  | ADMIN, SUPER_ADMIN   |
-| `POST` | `/api/wallets/send`          | Send money to another user                  | USER only            |
-| `POST` | `/api/wallets/cash-in`       | Agent deposits money into user's wallet     | AGENT only           |
-| `POST` | `/api/wallets/cash-out`      | User withdraws money from wallet            | USER only            |
-| `PATCH`| `/api/wallets/block/:id`     | Block a wallet                              | ADMIN, SUPER_ADMIN   |
-| `PATCH`| `/api/wallets/unblock/:id`   | Unblock a wallet                            | ADMIN, SUPER_ADMIN   |
+| `GET`  | `/wallet`               | Get all wallets                             | ADMIN, SUPER_ADMIN   |
+| `GET`  | `/wallet/my-wallet`     | Get own wallet info                         | USER, AGENT          |
+| `GET`  | `/wallet/:id`           | Get wallet info by user ID                  | ADMIN, SUPER_ADMIN   |
+| `POST` | `/wallet/send`          | Send money to another user                  | USER only            |
+| `POST` | `/wallet/cash-in`       | Agent deposits money into user's wallet     | AGENT only           |
+| `POST` | `/wallet/cash-out`      | User withdraws money from wallet            | USER only            |
+| `PATCH`| `/wallet/block/:id`     | Block a wallet                              | ADMIN, SUPER_ADMIN   |
+| `PATCH`| `/wallet/unblock/:id`   | Unblock a wallet                            | ADMIN, SUPER_ADMIN   |
 
 ---
 
@@ -107,8 +107,8 @@ It follows best practices in modular backend architecture, authentication, and v
 
 | Method | Endpoint                     | Description                                 | Access             |
 |--------|------------------------------|---------------------------------------------|--------------------|
-| `GET`  | `/api/transactions`          | Get all transaction records                 | ADMIN, SUPER_ADMIN |
-| `GET`  | `/api/transactions/me`       | Get logged-in user's or agent's transactions| USER, AGENT        |
+| `GET`  | `/transaction`          | Get all transaction records                 | ADMIN, SUPER_ADMIN |
+| `GET`  | `/transaction/me`       | Get logged-in user's or agent's transactions| USER, AGENT        |
 
 ---
 
