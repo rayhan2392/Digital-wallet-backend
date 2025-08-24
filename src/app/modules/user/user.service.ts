@@ -84,9 +84,16 @@ const createAdmin = async (payload: Partial<IUser>) => {
 }
 
 
-const getAllUsers = async () => {
-  const users = await User.find({})
-  return users;
+const getAllUsers = async (query:Record<string,string>) => {
+  console.log(query);
+  const users = await User.find(query)
+  const totalUsers = await User.countDocuments();
+  return {
+    data:users,
+    meta:{
+      total:totalUsers
+    }
+  };
 }
 
 const getSingleUser = async (id: string) => {

@@ -38,13 +38,16 @@ const createAdmin = catchAsync(async (req: Request, res: Response, nex: NextFunc
 
 const getAllUsers = catchAsync(async (req: Request, res: Response, nex: NextFunction) => {
 
-    const users = await userServices.getAllUsers()
+    const query = req.query
+
+    const result = await userServices.getAllUsers(query as Record<string, string>)
 
     sendResponse(res, {
         statusCode: 201,
         success: true,
         message: 'users retrived successfully',
-        data: users
+        data: result.data,
+        meta:result.meta
 
     })
 
