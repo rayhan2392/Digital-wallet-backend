@@ -14,7 +14,7 @@ const getAllWallets = async () => {
 }
 
 const getMyWallet = async (userId: string) => {
-    const wallet = await Wallet.findOne({ user: userId })
+    const wallet = await Wallet.findOne({ user: userId }).populate("user","name")
 
     if (!wallet) {
         throw new AppError(404, "No wallet found for this user");

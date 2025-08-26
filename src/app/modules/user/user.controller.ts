@@ -54,6 +54,24 @@ const getAllUsers = catchAsync(async (req: Request, res: Response, nex: NextFunc
     //
 })
 
+const getAllAgents = catchAsync(async (req: Request, res: Response, nex: NextFunction) => {
+
+    const query = req.query
+
+    const result = await userServices.getAllAgents(query as Record<string, string>)
+
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: 'agents retrived successfully',
+        data: result.data,
+        meta:result.meta
+
+    })
+
+    //
+})
+
 const getSingleUser = catchAsync(async (req: Request, res: Response, nex: NextFunction) => {
 
     const user = await userServices.getSingleUser(req.params.id)
@@ -154,5 +172,6 @@ export const userControllers = {
     handleUnblockUser,
     handleApproveAgent,
     handleSuspendAgent,
-    getMyProfile
+    getMyProfile,
+    getAllAgents
 }

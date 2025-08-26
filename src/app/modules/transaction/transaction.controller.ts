@@ -6,14 +6,15 @@ import { Transaction } from "./transaction.model";
 import { sendResponse } from '../../utils/sendResponse';
 
 const getAllTransactions = catchAsync(async(req:Request,res:Response,next:NextFunction)=>{
-   
-    const trasactions = await transactionServices.getAllTransactions();
+     const query = req.query
+    const result = await transactionServices.getAllTransactions(query as Record<string,string>);
 
     sendResponse(res,{
         statusCode:200,
         success:true,
         message:'Transactions retrived successfully',
-        data:trasactions
+        data:result.data,
+        meta:result.meta
     })
 
 })

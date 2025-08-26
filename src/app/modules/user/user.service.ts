@@ -84,14 +84,26 @@ const createAdmin = async (payload: Partial<IUser>) => {
 }
 
 
-const getAllUsers = async (query:Record<string,string>) => {
-  console.log(query);
+const getAllUsers = async (query: Record<string, string>) => {
+
   const users = await User.find(query)
-  const totalUsers = await User.countDocuments();
+  const totalUsers = await User.countDocuments(query);
   return {
-    data:users,
-    meta:{
-      total:totalUsers
+    data: users,
+    meta: {
+      total: totalUsers
+    }
+  };
+}
+
+const getAllAgents = async (query: Record<string, string>) => {
+
+  const users = await User.find({ ...query, role: "agent", isApproved: true })
+  const totalUsers = await User.countDocuments({ ...query, role: "agent", isApproved: true });
+  return {
+    data: users,
+    meta: {
+      total: totalUsers
     }
   };
 }
@@ -192,4 +204,5 @@ export const userServices = {
   handleUnblockUser,
   handleApproveAgent,
   handleSuspendAgent,
+  getAllAgents
 };

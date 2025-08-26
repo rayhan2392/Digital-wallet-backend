@@ -10,8 +10,9 @@ router.post("/register",validateRequest(registerUserZodSchema), userControllers.
 router.post("/create-admin",checkAuth(Role.SUPER_ADMIN), userControllers.createAdmin)     //superadmin only route
 router.get("/me",checkAuth(...Object.values(Role)),userControllers.getMyProfile)
 router.get("/all-users",checkAuth(Role.ADMIN,Role.SUPER_ADMIN), userControllers.getAllUsers)
+router.get("/agents",checkAuth(...Object.values(Role)), userControllers.getAllAgents)
 router.get("/:id",checkAuth(Role.ADMIN,Role.SUPER_ADMIN), userControllers.getSingleUser)
-// router.get("/me")   //will implement later
+
 //block/unblock user
 router.patch("/block/:id",checkAuth(Role.ADMIN,Role.SUPER_ADMIN), userControllers.handleBlockUser)
 router.patch("/unblock/:id",checkAuth(Role.ADMIN,Role.SUPER_ADMIN), userControllers.handleUnblockUser)

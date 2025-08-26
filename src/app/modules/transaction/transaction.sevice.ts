@@ -1,13 +1,20 @@
 import { Types } from "mongoose";
 import { Transaction } from "./transaction.model";
 
-const getAllTransactions = async () => {
-    const transactions = await Transaction.find({})
+const getAllTransactions = async (query: Record<string, string>) => {
+    const transactions = await Transaction.find(query)
         .populate("sender", "name email phone")
         .populate("receiver", "name email phone")
         .sort({ createdAt: -1 });
 
-    return transactions
+    const totalTransactions = await Transaction.countDocuments(query);
+
+    return {
+        data:transactions,
+        meta:{
+            total:totalTransactions
+        }
+    }
 }
 
 const getMyTransactions = async (userId: string) => {
@@ -21,7 +28,7 @@ const getMyTransactions = async (userId: string) => {
         .populate("receiver", "name email phone")
         .sort({ createdAt: -1 });
 
-  return myTransactions
+    return myTransactions
 }
 
 export const transactionServices = {
