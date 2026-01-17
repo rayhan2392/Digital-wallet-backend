@@ -10,7 +10,7 @@ const app = express()
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: envVars.FRONTEND_URL,
+    origin: [envVars.FRONTEND_URL, "https://digital-wallet-frontend-nine.vercel.app"],
     credentials: true
 }))
 
@@ -23,8 +23,8 @@ app.get("/", (req: Request, res: Response) => {
     })
 })
 
-app.use(globalErrorHandler)
-
 app.use(notFound)
+
+app.use(globalErrorHandler)
 
 export default app
