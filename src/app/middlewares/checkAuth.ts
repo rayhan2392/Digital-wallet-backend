@@ -25,8 +25,8 @@ export const checkAuth = (...authRoles: string[]) => async (req: Request, res: R
             throw new AppError(httpStatus.BAD_REQUEST, "User does not exist")
         }
 
-        if (isUserExist.isBlocked === true || isUserExist.isApproved === false) {
-            throw new AppError(httpStatus.BAD_REQUEST, "Your account is either blocked or not approved yet")
+        if (isUserExist.isBlocked === true ) {
+            throw new AppError(httpStatus.BAD_REQUEST, "Your account is blocked")
         }
 
         if (!authRoles.includes(verifiedToken.role)) {

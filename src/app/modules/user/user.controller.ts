@@ -6,7 +6,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import { User } from "./user.model";
 
 
-const createUser = catchAsync(async (req: Request, res: Response, nex: NextFunction) => {
+const createUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
     const user = await userServices.createUser(req.body)
 
