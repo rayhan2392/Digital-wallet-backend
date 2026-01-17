@@ -17,10 +17,26 @@ const app_1 = __importDefault(require("./app"));
 const env_1 = require("./app/config/env");
 const seedSuperAdmin_1 = require("./app/utils/seedSuperAdmin");
 let server;
-const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
+let isConnected = false;
+// Database connection for both local and serverless
+const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    if (isConnected) {
+        return;
+    }
     try {
         yield mongoose_1.default.connect(env_1.envVars.DB_URL);
+        isConnected = true;
         console.log("Connected to DB!!");
+        // Seed super admin if needed
+        yield (0, seedSuperAdmin_1.seedSuperAdmin)();
+    }
+    catch (error) {
+        console.log("DB Connection Error:", error);
+    }
+});
+const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield connectDB();
         server = app_1.default.listen(env_1.envVars.PORT, () => {
             console.log(`Server is listening to port ${env_1.envVars.PORT}`);
         });
@@ -29,10 +45,16 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
         console.log(error);
     }
 });
-(() => __awaiter(void 0, void 0, void 0, function* () {
-    yield startServer();
-    yield (0, seedSuperAdmin_1.seedSuperAdmin)();
-}))();
+// Only start server if not in Vercel serverless environment
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    (() => __awaiter(void 0, void 0, void 0, function* () {
+        yield startServer();
+    }))();
+}
+else {
+    // For Vercel: Connect to DB on cold start
+    connectDB();
+}
 process.on("SIGTERM", () => {
     console.log("SIGTERM signal recieved... Server shutting down..");
     if (server) {

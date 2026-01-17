@@ -6,13 +6,29 @@ import { envVars } from "./app/config/env";
 import { seedSuperAdmin } from "./app/utils/seedSuperAdmin";
 
 let server: Server;
+let isConnected = false;
 
+// Database connection for both local and serverless
+const connectDB = async () => {
+    if (isConnected) {
+        return;
+    }
+
+    try {
+        await mongoose.connect(envVars.DB_URL);
+        isConnected = true;
+        console.log("Connected to DB!!");
+        
+        // Seed super admin if needed
+        await seedSuperAdmin();
+    } catch (error) {
+        console.log("DB Connection Error:", error);
+    }
+};
 
 const startServer = async () => {
     try {
-        await mongoose.connect(envVars.DB_URL)
-
-        console.log("Connected to DB!!");
+        await connectDB();
 
         server = app.listen(envVars.PORT, () => {
             console.log(`Server is listening to port ${envVars.PORT}`);
@@ -22,10 +38,15 @@ const startServer = async () => {
     }
 }
 
-(async () => {
-    await startServer();
-    await seedSuperAdmin();
-})()
+// Only start server if not in Vercel serverless environment
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    (async () => {
+        await startServer();
+    })()
+} else {
+    // For Vercel: Connect to DB on cold start
+    connectDB();
+}
 
 process.on("SIGTERM", () => {
     console.log("SIGTERM signal recieved... Server shutting down..");
