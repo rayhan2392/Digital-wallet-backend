@@ -88,3 +88,6 @@ process.on("uncaughtException", (err) => {
  * uncaught rejection error
  * signal termination sigterm
  */
+
+// Export for Vercel serverless deployment
+export default app;

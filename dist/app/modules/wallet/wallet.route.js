@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.WalletRoutes = void 0;
+const checkAuth_1 = require("./../../middlewares/checkAuth");
+const express_1 = require("express");
+const wallet_controller_1 = require("./wallet.controller");
+const user_interface_1 = require("../user/user.interface");
+const router = (0, express_1.Router)();
+router.get("/", (0, checkAuth_1.checkAuth)(user_interface_1.Role.SUPER_ADMIN, user_interface_1.Role.ADMIN), wallet_controller_1.walletControllers.getAllWallets);
+router.get("/me", (0, checkAuth_1.checkAuth)(user_interface_1.Role.USER, user_interface_1.Role.AGENT), wallet_controller_1.walletControllers.getMyWallet);
+router.post("/send", (0, checkAuth_1.checkAuth)(user_interface_1.Role.USER), wallet_controller_1.walletControllers.sendMoney);
+router.post("/cash-in", (0, checkAuth_1.checkAuth)(user_interface_1.Role.AGENT), wallet_controller_1.walletControllers.cashInMoney);
+router.post("/cash-out", (0, checkAuth_1.checkAuth)(user_interface_1.Role.USER), wallet_controller_1.walletControllers.cashOutMoney);
+router.get("/:id", (0, checkAuth_1.checkAuth)(user_interface_1.Role.SUPER_ADMIN, user_interface_1.Role.ADMIN), wallet_controller_1.walletControllers.getWalletById);
+router.patch("/block/:id", (0, checkAuth_1.checkAuth)(user_interface_1.Role.SUPER_ADMIN, user_interface_1.Role.ADMIN), wallet_controller_1.walletControllers.blockWallet);
+router.patch("/unblock/:id", (0, checkAuth_1.checkAuth)(user_interface_1.Role.SUPER_ADMIN, user_interface_1.Role.ADMIN), wallet_controller_1.walletControllers.unBlockWallet);
+exports.WalletRoutes = router;
