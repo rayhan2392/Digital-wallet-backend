@@ -106,3 +106,5 @@ process.on("uncaughtException", (err) => {
  * uncaught rejection error
  * signal termination sigterm
  */
+// Export the Express app for Vercel serverless
+exports.default = app_1.default;
