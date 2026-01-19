@@ -34,6 +34,7 @@ const createUser = async (payload: Partial<IUser>) => {
     const createdUser = user[0];
 
 
+
     const wallet = await Wallet.create(
       [
         {
@@ -59,7 +60,6 @@ const createUser = async (payload: Partial<IUser>) => {
     // ❌ Rollback
     await session.abortTransaction();
     session.endSession();
-    console.log("Transaction failed:", error);
     throw error;
   }
 };

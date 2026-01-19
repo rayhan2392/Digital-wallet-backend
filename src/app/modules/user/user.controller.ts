@@ -4,11 +4,22 @@ import { catchAsync } from "../../utils/catchAsync";
 import { userServices } from "./user.service";
 import { sendResponse } from "../../utils/sendResponse";
 import { User } from "./user.model";
+import { setAuthCookie } from "../../utils/setCookie";
+import { createUserTokens } from "../../utils/userTokens";
+
+
 
 
 const createUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
     const user = await userServices.createUser(req.body)
+
+    if (!user) {
+        return next(new Error('Failed to create user'))
+    }
+
+    const token = createUserTokens(user) 
+    setAuthCookie(res, token)
 
     sendResponse(res, {
         statusCode: 201,

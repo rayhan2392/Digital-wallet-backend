@@ -11,6 +11,7 @@ const credentialLogin = catchAsync(async (req: Request, res: Response, next: Nex
     const loginInfo = await authServices.credentialLogin(req.body)
 
     setAuthCookie(res, loginInfo)
+    console.log("Login Info:", loginInfo);
 
     sendResponse(res, {
         success: true,
