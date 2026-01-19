@@ -21,6 +21,7 @@ const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const credentialLogin = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const loginInfo = yield auth_service_1.authServices.credentialLogin(req.body);
     (0, setCookie_1.setAuthCookie)(res, loginInfo);
+    console.log("Login Info:", loginInfo);
     (0, sendResponse_1.sendResponse)(res, {
         success: true,
         statusCode: http_status_codes_1.default.OK,

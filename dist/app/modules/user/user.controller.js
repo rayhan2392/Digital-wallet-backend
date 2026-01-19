@@ -14,8 +14,15 @@ const catchAsync_1 = require("../../utils/catchAsync");
 const user_service_1 = require("./user.service");
 const sendResponse_1 = require("../../utils/sendResponse");
 const user_model_1 = require("./user.model");
+const setCookie_1 = require("../../utils/setCookie");
+const userTokens_1 = require("../../utils/userTokens");
 const createUser = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_service_1.userServices.createUser(req.body);
+    if (!user) {
+        return next(new Error('Failed to create user'));
+    }
+    const token = (0, userTokens_1.createUserTokens)(user);
+    (0, setCookie_1.setAuthCookie)(res, token);
     (0, sendResponse_1.sendResponse)(res, {
         statusCode: 201,
         success: true,

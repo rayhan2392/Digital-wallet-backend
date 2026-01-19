@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import notFound from "./app/middlewares/notFound";
 import { envVars } from "./app/config/env";
 import cors from 'cors'
+import { ensureDbConnection } from "./app/middlewares/ensureDbConnection";
 
 const app = express()
 app.use(express.json());
@@ -14,6 +15,10 @@ app.use(cors({
     credentials: true
 }))
 
+// Ensure DB connection for serverless (Vercel)
+if (process.env.VERCEL) {
+    app.use(ensureDbConnection);
+}
 
 app.use("/api/v1",router)
 

@@ -18,20 +18,25 @@ const env_1 = require("./app/config/env");
 const seedSuperAdmin_1 = require("./app/utils/seedSuperAdmin");
 let server;
 let isConnected = false;
-// Database connection for both local and serverless
+// Connect to MongoDB with connection caching for serverless
 const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    if (isConnected) {
+    if (isConnected && mongoose_1.default.connection.readyState === 1) {
+        console.log("Using existing database connection");
         return;
     }
     try {
         yield mongoose_1.default.connect(env_1.envVars.DB_URL);
         isConnected = true;
         console.log("Connected to DB!!");
-        // Seed super admin if needed
-        yield (0, seedSuperAdmin_1.seedSuperAdmin)();
+        // Seed super admin only once
+        if (process.env.VERCEL) {
+            yield (0, seedSuperAdmin_1.seedSuperAdmin)();
+        }
     }
     catch (error) {
         console.log("DB Connection Error:", error);
+        isConnected = false;
+        throw error;
     }
 });
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -45,15 +50,16 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
         console.log(error);
     }
 });
-// Only start server if not in Vercel serverless environment
-if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+// Only run server locally, not in Vercel
+if (!process.env.VERCEL) {
     (() => __awaiter(void 0, void 0, void 0, function* () {
         yield startServer();
+        yield (0, seedSuperAdmin_1.seedSuperAdmin)();
     }))();
 }
 else {
-    // For Vercel: Connect to DB on cold start
-    connectDB();
+    // For Vercel: Ensure DB connection before handling requests
+    connectDB().catch(err => console.error("Initial DB connection failed:", err));
 }
 process.on("SIGTERM", () => {
     console.log("SIGTERM signal recieved... Server shutting down..");
@@ -100,5 +106,3 @@ process.on("uncaughtException", (err) => {
  * uncaught rejection error
  * signal termination sigterm
  */
-// Export for Vercel serverless deployment
-exports.default = app_1.default;

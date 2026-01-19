@@ -60,7 +60,6 @@ const createUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         // ❌ Rollback
         yield session.abortTransaction();
         session.endSession();
-        console.log("Transaction failed:", error);
         throw error;
     }
 });
